@@ -21,7 +21,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../Select";
-import { CancelMode, UpdateRecipientMode } from "../../program/modes";
+import {
+  CancelMode,
+  ModeLabel,
+  UpdateRecipientMode,
+} from "../../program/modes";
 
 export const CreateForm: React.FC = () => {
   const { getTransactionSendingSigner, connectedAccount } = useWallet();
@@ -32,6 +36,10 @@ export const CreateForm: React.FC = () => {
   const form = useForm<LockSchema>({
     // @ts-expect-error: valibot transforms arent typed properly yet. TODO: update hookform/resolvers package when fix ships
     resolver: valibotResolver(LockSchema),
+    defaultValues: {
+      updateRecipientMode: UpdateRecipientMode.CREATOR_ONLY,
+      cancelMode: CancelMode.CREATOR_ONLY,
+    },
   });
   async function onSubmit(values: LockSchema) {
     if (!signer) {
@@ -192,12 +200,12 @@ export const CreateForm: React.FC = () => {
               <Select>
                 <FormControl>
                   <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Only Creator" />
+                    <SelectValue placeholder={ModeLabel["creator"]} />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent sideOffset={18}>
                   {Object.values(CancelMode).map((mode) => (
-                    <SelectItem value={mode}>{mode}</SelectItem>
+                    <SelectItem value={mode}>{ModeLabel[mode]}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -215,12 +223,12 @@ export const CreateForm: React.FC = () => {
               <Select>
                 <FormControl>
                   <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Only Creator" />
+                    <SelectValue placeholder={ModeLabel["creator"]} />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent sideOffset={18}>
                   {Object.values(UpdateRecipientMode).map((mode) => (
-                    <SelectItem value={mode}>{mode}</SelectItem>
+                    <SelectItem value={mode}>{ModeLabel[mode]}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>

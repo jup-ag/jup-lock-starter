@@ -1,5 +1,4 @@
 import { createRootRoute, Outlet } from "@tanstack/react-router";
-import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import { WalletProvider } from "@solana-wallets/react-2.0";
 
 export const Route = createRootRoute({
@@ -10,7 +9,7 @@ export const Route = createRootRoute({
       disconnectOnAccountChange={true}
     >
       <Outlet />
-      <TanStackRouterDevtools />
+      {/* <TanStackRouterDevtools /> */}
     </WalletProvider>
   ),
 });

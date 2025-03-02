@@ -9,7 +9,7 @@ export const Input: React.FC<InputProps> = ({ className, ...props }) => {
   return (
     <div
       className={cn(
-        `relative inline-block border-[5px] bg-white text-black text-lg shadow-(--pop-shadow-white-white)`,
+        `relative inline-block border-[5px] bg-(--pop-yellow) text-black text-lg shadow-(--pop-shadow-yellow-yellow)`,
         className,
       )}
       style={pixelatedBorderStyle}
