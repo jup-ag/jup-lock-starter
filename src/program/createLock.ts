@@ -40,8 +40,13 @@ import {
 } from "./modes";
 import { parseUnits } from "../utils/number";
 
+// copied from https://github.com/fabian-hiller/valibot/discussions/827
 function FormNumberSchema(msg: string) {
-  return v.pipe(v.string(msg), v.transform(parseInt), v.nonNullish(v.number()));
+  return v.pipe(
+    v.string(msg),
+    v.transform(parseFloat),
+    v.nonNullish(v.number()),
+  );
 }
 
 export const LockSchema = v.object({
@@ -81,7 +86,6 @@ export async function createLock({
   version: "spl" | "token-2022";
   decimals: number;
 }) {
-  console.log({ form });
   if (!form.duration || !form.token.amount) {
     console.error("createLock: missing required value: ", {
       vestingPeriodAmount: form.duration,
@@ -164,9 +168,6 @@ export async function createLock({
   const lockAmount = Number(form.token.amount) - cliffAmount;
   const amountPerSecond = lockAmount / vestingPeriodSeconds;
 
-  // const unlockRateSeconds = getSecondsFromDurationUnit(
-  //   form.unlockRateDurationUnit,
-  // );
   const unlockRateSeconds = Number(form.unlockRate) * 60;
   const amountPerPeriod = amountPerSecond * unlockRateSeconds;
   const numPeriods = Math.floor(lockAmount / amountPerPeriod);

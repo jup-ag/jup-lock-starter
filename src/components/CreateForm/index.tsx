@@ -34,7 +34,7 @@ export const CreateForm: React.FC = () => {
     [connectedAccount],
   );
   const form = useForm<LockSchema>({
-    // @ts-expect-error: valibot transforms arent typed properly yet. TODO: update hookform/resolvers package when fix ships
+    // @ts-expect-error: valibot transforms arent typed properly yet. TODO: update hookform/resolvers package when fix ships https://github.com/react-hook-form/resolvers/issues/743
     resolver: valibotResolver(LockSchema),
     defaultValues: {
       updateRecipientMode: UpdateRecipientMode.CREATOR_ONLY,
@@ -78,7 +78,12 @@ export const CreateForm: React.FC = () => {
             <FormItem>
               <FormLabel>Lock Amount</FormLabel>
               <FormControl>
-                <Input type="number" placeholder="69420" {...field} />
+                <Input
+                  type="number"
+                  inputMode="decimal"
+                  placeholder="69420"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -136,6 +141,7 @@ export const CreateForm: React.FC = () => {
               <FormControl>
                 <Input
                   type="number"
+                  inputMode="decimal"
                   placeholder="10080 (1 week in mins)"
                   {...field}
                 />
@@ -154,6 +160,7 @@ export const CreateForm: React.FC = () => {
               <FormControl>
                 <Input
                   type="number"
+                  inputMode="decimal"
                   placeholder="10080 (1 week in mins)"
                   {...field}
                 />
@@ -170,7 +177,12 @@ export const CreateForm: React.FC = () => {
             <FormItem>
               <FormLabel>Cliff Amount</FormLabel>
               <FormControl>
-                <Input type="number" placeholder="4269" {...field} />
+                <Input
+                  type="number"
+                  inputMode="decimal"
+                  placeholder="4269"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -184,7 +196,12 @@ export const CreateForm: React.FC = () => {
             <FormItem>
               <FormLabel>Unlock Rate (in mins)</FormLabel>
               <FormControl>
-                <Input type="number" placeholder="60" {...field} />
+                <Input
+                  type="number"
+                  inputMode="decimal"
+                  placeholder="60"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
