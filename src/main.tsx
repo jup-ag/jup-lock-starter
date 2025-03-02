@@ -6,7 +6,6 @@ import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { routeTree } from "./routeTree.gen";
 
 import "./styles/index.css";
-import "@solana-wallets/unified/index.css";
 import reportWebVitals from "./reportWebVitals.ts";
 
 // Create a new router instance

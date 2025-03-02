@@ -14,6 +14,7 @@ import {
   getSyncNativeInstruction,
 } from "@solana-program/token";
 import { getTransferSolInstruction } from "@solana-program/system";
+import * as v from "valibot";
 
 import {
   LOCKER_PROGRAM_ADDRESS,
@@ -31,32 +32,65 @@ import {
   ESCROW_PDA_SEED,
   EVENT_AUTHORITY_PDA_SEED,
 } from "./constants";
-import { getCancelModeValue, getUpdateRecipientModeValue } from "./modes";
+import {
+  CancelMode,
+  getCancelModeValue,
+  getUpdateRecipientModeValue,
+  UpdateRecipientMode,
+} from "./modes";
 import { parseUnits } from "../utils/number";
+
+function FormNumberSchema(msg: string) {
+  return v.pipe(v.string(msg), v.transform(parseInt), v.nonNullish(v.number()));
+}
+
+export const LockSchema = v.object({
+  title: v.string("Lock title is required."),
+  token: v.object({
+    address: v.string("Token address is required."),
+    amount: FormNumberSchema("Token amount is required."),
+  }),
+  recipient: v.pipe(v.string("Recipient address is required.")),
+  startDate: v.string("Lock start date is required."),
+  duration: FormNumberSchema("Vesting duration is required."),
+  cliff: v.optional(
+    v.object({
+      duration: v.optional(
+        FormNumberSchema("Cliff duration must be non-zero."),
+      ),
+      amount: v.optional(FormNumberSchema("Cliff amount must be non-zero.")),
+    }),
+  ),
+  unlockRate: FormNumberSchema("Unlock rate is required."),
+  cancelMode: v.enum(CancelMode, "Cancel mode is required."),
+  updateRecipientMode: v.enum(
+    UpdateRecipientMode,
+    "Update recipient mode is required.",
+  ),
+});
+export type LockSchema = v.InferInput<typeof LockSchema>;
 
 export async function createLock({
   signer,
   form,
-  mintAddr,
   version,
   decimals,
 }: {
   signer: TransactionSendingSigner;
   form: LockSchema;
-  mintAddr: string;
   version: "spl" | "token-2022";
   decimals: number;
 }) {
   console.log({ form });
-  if (!form.vestingPeriodAmount || !form.lockAmount) {
+  if (!form.duration || !form.token.amount) {
     console.error("createLock: missing required value: ", {
-      vestingPeriodAmount: form.vestingPeriodAmount,
-      lockAmount: form.lockAmount,
+      vestingPeriodAmount: form.duration,
+      lockAmount: form.token.amount,
     });
     throw new Error("Create lock failed: missing required amount values");
   }
 
-  const mint = address(mintAddr);
+  const mint = address(form.token.address);
 
   // Install ED25519 webcrypto polyfill
   install();
@@ -109,32 +143,31 @@ export async function createLock({
   instructions.push(createEscrowAta);
 
   // Generate escrow inputs from form data
-  const recipient = address(form.recipientInfos[0].address);
+  const recipient = address(form.recipient);
 
-  const startTimeDate = new Date(form.vestingStartDate);
-  const startTime = BigInt(Math.floor(startTimeDate.getTime() / 1000));
+  const startTimeDate = form.startDate;
+  const startTime = BigInt(
+    Math.floor(new Date(startTimeDate).getTime() / 1000),
+  );
 
   // Cliff values
-  const cliffSeconds = form.cliff
-    ? form.cliff.cliffPeriodAmount *
-      getSecondsFromDurationUnit(form.cliff.cliffPeriodDurationUnit)
+  const cliffSeconds = form.cliff?.duration
+    ? Number(form.cliff.duration) * 60
     : 0;
   const cliffTime = startTime + BigInt(cliffSeconds);
-  const cliffAmount = form.cliff ? form.cliff.cliffAmount : 0;
+  const cliffAmount = form.cliff?.amount ? Number(form.cliff.amount) : 0;
 
   // Vesting period = total duration - cliff duration
-  const vestingPeriodSeconds =
-    form.vestingPeriodAmount *
-      getSecondsFromDurationUnit(form.vestingPeriodDurationUnit) -
-    cliffSeconds;
+  const vestingPeriodSeconds = Number(form.duration) * 60 - cliffSeconds;
 
   // Lock amount = total - cliff
-  const lockAmount = form.lockAmount - cliffAmount;
+  const lockAmount = Number(form.token.amount) - cliffAmount;
   const amountPerSecond = lockAmount / vestingPeriodSeconds;
 
-  const unlockRateSeconds = getSecondsFromDurationUnit(
-    form.unlockRateDurationUnit,
-  );
+  // const unlockRateSeconds = getSecondsFromDurationUnit(
+  //   form.unlockRateDurationUnit,
+  // );
+  const unlockRateSeconds = Number(form.unlockRate) * 60;
   const amountPerPeriod = amountPerSecond * unlockRateSeconds;
   const numPeriods = Math.floor(lockAmount / amountPerPeriod);
 

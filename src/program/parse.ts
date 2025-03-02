@@ -11,6 +11,39 @@ import {
   type UpdateRecipientMode,
 } from "./modes";
 
+export type LockInfo = {
+  // Lock contract address
+  address: string;
+  // Token id/address
+  mint: string;
+  // Name given to lock
+  title: string;
+  // Total amount unlocked so far
+  total_unlocked_amount: number;
+  // Total amount locked
+  total_locked_amount: number;
+  // Start date of vesting in unix timestamp in milliseconds
+  vesting_start_time_ms: number;
+  // End date of vesting in unix timestamp in milliseconds
+  vesting_end_time_ms: number;
+  // Amount unlocked after cliff ends
+  cliff_unlock_amount: number;
+  // Cliff duration in milliseconds
+  cliff_time_ms: number;
+  // Amount unlocked each interval/period
+  amount_per_period: number;
+  // Unlock interval (1 min, 1 hour, 1 day, etc)
+  period_ms: number;
+  // Address of owner of locked tokens
+  creator: string;
+  // Address of recipient of locked tokens
+  recipient: string;
+  // Percentage of locked tokens claimed
+  claim_progress_percent: number;
+  // Total amount claimed so far
+  total_claimed_amount: number;
+};
+
 export type ExpandedLockInfo = LockInfo & {
   cancelledAt: number;
   cancelMode: CancelMode;

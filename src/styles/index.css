@@ -7,8 +7,19 @@
   font-style: normal;
 }
 
+@theme {
+  --pop-pink: #c381b5;
+  --pop-yellow: #fefcd0;
+
+  --pop-shadow-pink-yellow: 1.6px 1.6px 0 1.6px var(--pop-pink), -1.6px -1.6px 0 1.6px var(--pop-yellow);
+  --pop-shadow-yellow-yellow: 1.6px 1.6px 0 1.6px var(--pop-yellow), -1.6px -1.6px 0 1.6px var(--pop-yellow);
+  --pop-shadow-pink-pink: 1.6px 1.6px 0 1.6px var(--pop-pink), -1.6px -1.6px 0 1.6px var(--pop-pink);
+  --pop-shadow-white-white: 1.6px 1.6px 0 1.6px #fff, -1.6px -1.6px 0 1.6px #fff;
+  --pop-shadow-pink-white: 1.6px 1.6px 0 1.6px var(--pop-pink), -1.6px -1.6px 0 1.6px #fff;
+}
+
 body {
-  @apply m-0;
+  @apply m-0 bg-[#E8E3E7];
   font-family: "Minecraft", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
