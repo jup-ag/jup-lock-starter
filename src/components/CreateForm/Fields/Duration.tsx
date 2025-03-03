@@ -19,13 +19,13 @@ export const DurationField: React.FC<FieldProps> = ({ state, setState }) => {
   return (
     <Field>
       <span className={cn("block", { "text-red-500": !!durationError })}>
-        Cliff Duration (in mins)
+        Lock Duration (in mins)
       </span>
       <Input
         type="number"
         inputMode="decimal"
         placeholder="60"
-        value={state?.cliffDuration}
+        value={state?.duration}
         onInput={(e) => {
           const value = e.currentTarget.valueAsNumber;
           if (isNaN(value) || !value) {
