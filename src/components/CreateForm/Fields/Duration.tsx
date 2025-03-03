@@ -19,7 +19,7 @@ export const DurationField: React.FC<FieldProps> = ({ state, setState }) => {
   return (
     <Field>
       <span className={cn("block", { "text-red-500": !!durationError })}>
-        Lock Duration (in mins)
+        Vesting Duration (in mins)
       </span>
       <Input
         type="number"
