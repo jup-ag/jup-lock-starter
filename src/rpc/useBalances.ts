@@ -11,16 +11,20 @@ import {
 } from "./addresses";
 
 export type AssetBalance = {
+  type: "spl" | "token-2022";
   amount: bigint;
   decimals: number;
   display: number;
 };
 
-export async function useBalances(rawAddress: string) {
-  const addr = address(rawAddress);
+export function useBalances(rawAddress: string | undefined) {
   return useQuery({
-    queryKey: ["balances", addr],
+    queryKey: ["balances", rawAddress],
     queryFn: async ({ signal }) => {
+      if (!rawAddress) {
+        return {};
+      }
+      const addr = address(rawAddress);
       const getSolBalances = rpc
         .getAccountInfo(addr, {
           commitment: "confirmed",

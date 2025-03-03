@@ -13,27 +13,22 @@ import {
   appendTransactionMessageInstructions,
   prependTransactionMessageInstruction,
   signAndSendTransactionMessageWithSigners,
-  createSolanaRpcSubscriptions,
 } from "@solana/web3.js";
 import { getSetComputeUnitLimitInstruction } from "@solana-program/compute-budget";
 
-const HTTP_API_URL =
-  "https://jupiter-backend.rpcpool.com/d2c71a1c-824e-4e85-99cf-419fd967fda2";
-const WS_API_URL =
-  "wss://jupiter-backend.rpcpool.com/d2c71a1c-824e-4e85-99cf-419fd967fda2";
-
+const HTTP_API_URL = "https://solana-rpc.publicnode.com";
 // Create an HTTP transport or any custom transport of your choice.
 const transport = createDefaultRpcTransport({
   url: mainnet(HTTP_API_URL),
 });
-
-// TODO: add websocket rpc subscription
-export const rpcSubscriptions = createSolanaRpcSubscriptions(
-  mainnet(WS_API_URL),
-);
-
 // Create an RPC client using that transport.
 export const rpc = createSolanaRpcFromTransport(transport);
+
+// const WS_API_URL =
+//   "wss://solana-rpc.publicnode.com";
+// export const rpcSubscriptions = createSolanaRpcSubscriptions(
+//   mainnet(WS_API_URL),
+// );
 
 // Create an estimator function.
 const getComputeUnitEstimateForTransactionMessage =

@@ -50,22 +50,19 @@ function FormNumberSchema(msg: string) {
 }
 
 export const LockSchema = v.object({
-  title: v.string("Lock title is required."),
-  token: v.object({
-    address: v.string("Token address is required."),
-    amount: FormNumberSchema("Token amount is required."),
-  }),
+  title: v.pipe(
+    v.string("Lock title is required."),
+    v.minLength(1, "Lock title is required."),
+  ),
+  tokenAddress: v.string("Token address is required."),
+  tokenAmount: FormNumberSchema("Token amount is required."),
   recipient: v.pipe(v.string("Recipient address is required.")),
   startDate: v.string("Lock start date is required."),
   duration: FormNumberSchema("Vesting duration is required."),
-  cliff: v.optional(
-    v.object({
-      duration: v.optional(
-        FormNumberSchema("Cliff duration must be non-zero."),
-      ),
-      amount: v.optional(FormNumberSchema("Cliff amount must be non-zero.")),
-    }),
+  cliffDuration: v.optional(
+    FormNumberSchema("Cliff duration must be non-zero."),
   ),
+  cliffAmount: v.optional(FormNumberSchema("Cliff amount must be non-zero.")),
   unlockRate: FormNumberSchema("Unlock rate is required."),
   cancelMode: v.enum(CancelMode, "Cancel mode is required."),
   updateRecipientMode: v.enum(
@@ -73,7 +70,8 @@ export const LockSchema = v.object({
     "Update recipient mode is required.",
   ),
 });
-export type LockSchema = v.InferInput<typeof LockSchema>;
+export type InputLockSchema = v.InferInput<typeof LockSchema>;
+export type LockSchema = v.InferOutput<typeof LockSchema>;
 
 export async function createLock({
   signer,
@@ -86,15 +84,15 @@ export async function createLock({
   version: "spl" | "token-2022";
   decimals: number;
 }) {
-  if (!form.duration || !form.token.amount) {
+  if (!form.duration || !form.tokenAmount) {
     console.error("createLock: missing required value: ", {
       vestingPeriodAmount: form.duration,
-      lockAmount: form.token.amount,
+      lockAmount: form.tokenAmount,
     });
     throw new Error("Create lock failed: missing required amount values");
   }
 
-  const mint = address(form.token.address);
+  const mint = address(form.tokenAddress);
 
   // Install ED25519 webcrypto polyfill
   install();
@@ -155,17 +153,15 @@ export async function createLock({
   );
 
   // Cliff values
-  const cliffSeconds = form.cliff?.duration
-    ? Number(form.cliff.duration) * 60
-    : 0;
+  const cliffSeconds = form.cliffDuration ? Number(form.cliffDuration) * 60 : 0;
   const cliffTime = startTime + BigInt(cliffSeconds);
-  const cliffAmount = form.cliff?.amount ? Number(form.cliff.amount) : 0;
+  const cliffAmount = form.cliffAmount ? Number(form.cliffAmount) : 0;
 
   // Vesting period = total duration - cliff duration
   const vestingPeriodSeconds = Number(form.duration) * 60 - cliffSeconds;
 
   // Lock amount = total - cliff
-  const lockAmount = Number(form.token.amount) - cliffAmount;
+  const lockAmount = Number(form.tokenAmount) - cliffAmount;
   const amountPerSecond = lockAmount / vestingPeriodSeconds;
 
   const unlockRateSeconds = Number(form.unlockRate) * 60;
