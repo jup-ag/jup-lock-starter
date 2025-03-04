@@ -18,8 +18,9 @@ export const Button: React.FC<ComponentProps<"button">> = ({
     <button
       style={customStyle}
       className={cn(
-        "border-[5px] text-black bg-(--pop-yellow) shadow-(--pop-shadow-pink-yellow) font-medium hover:cursor-pointer",
-        "active:translate-y-[2px] active:shadow-(--pop-shadow-yellow-yellow)",
+        "border-[5px] text-black bg-(--pop-yellow) shadow-(--pop-shadow-pink-yellow) font-medium enabled:hover:cursor-pointer",
+        "enabled:active:translate-y-[2px] enabled:active:shadow-(--pop-shadow-yellow-yellow)",
+        "disabled:opacity-20",
         className,
       )}
       {...props}
@@ -28,5 +29,3 @@ export const Button: React.FC<ComponentProps<"button">> = ({
     </button>
   );
 };
-
-// export { styles as ButtonStyles };

@@ -1,7 +1,7 @@
 import { useWallet } from "@solana-wallets/react-2.0";
 import { useEffect, useMemo, useState, type ComponentProps } from "react";
 
-import { Button } from "../Button/Button";
+import { Button } from "../Button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../Dialog";
 import { cn } from "../../styles/cn";
 import { TruncatedAddress } from "../TruncatedAddress";

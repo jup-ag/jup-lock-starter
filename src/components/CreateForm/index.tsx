@@ -8,7 +8,7 @@ import {
   LockSchema,
   type InputLockSchema,
 } from "../../program/createLock";
-import { Button } from "../Button/Button";
+import { Button } from "../Button";
 import { useBalances } from "../../rpc/useBalances";
 import { UpdateRecipientModeField } from "./Fields/UpdateRecipientMode";
 import { CancelModeField } from "./Fields/CancelMode";
@@ -39,6 +39,11 @@ export const CreateForm: React.FC = () => {
   const { data: balances } = useBalances(signer?.address.toString());
 
   const [state, setState] = useState<Partial<InputLockSchema>>({});
+  const isFormValid = useMemo(() => {
+    const res = safeParse(LockSchema, state);
+    return !res.issues || res.issues.length === 0;
+  }, [state]);
+
   const [successModalOpen, setSuccessModalOpen] = useState(false);
   const [txHash, setTxHash] = useState<string | undefined>();
   const onSubmit = useCallback(async () => {
@@ -121,7 +126,11 @@ export const CreateForm: React.FC = () => {
               setState={setState}
             />
 
-            <Button className="w-full mt-2.5 text-2xl py-1" onClick={onSubmit}>
+            <Button
+              className="w-full mt-2.5 text-2xl py-1"
+              disabled={!isFormValid}
+              onClick={onSubmit}
+            >
               Create lock
             </Button>
           </>
