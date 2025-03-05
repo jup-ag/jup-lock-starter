@@ -8,8 +8,11 @@ export const Route = createRootRoute({
       localStorageKey="unified:wallet-storage-key"
       disconnectOnAccountChange={true}
     >
-      <Outlet />
-      {/* <TanStackRouterDevtools /> */}
+      <main className="min-h-screen flex items-center justify-center py-18 px-2.5">
+        <div className="text-center h-full space-y-12">
+          <Outlet />
+        </div>
+      </main>
     </WalletProvider>
   ),
 });

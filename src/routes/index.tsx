@@ -1,20 +1,36 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 
-import { CreateForm } from "../components/CreateForm";
+import { Button } from "../components/Button";
 
 export const Route = createFileRoute("/")({
   component: App,
 });
 
 function App() {
+  const navigate = useNavigate();
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="text-center h-full space-y-12 py-18 px-2.5">
-        <header className="text-4xl font-medium">Create Lock</header>
-        <div className="space-y-7.5 w-full">
-          <CreateForm />
-        </div>
+    <>
+      <header className="text-4xl font-medium w-full">Welcome to Lock</header>
+      <div className="flex flex-col gap-y-7.5 items-center w-full">
+        <Button
+          className="text-xl font-medium py-1.5 min-w-64"
+          onClick={() => navigate({ to: "/search" })}
+        >
+          Search
+        </Button>
+        <Button
+          className="text-xl font-medium py-1.5 min-w-64"
+          onClick={() => navigate({ to: "/create" })}
+        >
+          Create
+        </Button>
+        <Button
+          className="text-xl font-medium py-1.5 min-w-64"
+          onClick={() => navigate({ to: "/locks" })}
+        >
+          View
+        </Button>
       </div>
-    </div>
+    </>
   );
 }

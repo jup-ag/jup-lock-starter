@@ -73,6 +73,7 @@ export function useBalances(rawAddress: string | undefined) {
         const decimals = 9;
         if (rawLamports != null) {
           balances[WRAPPED_SOL_ID] = {
+            type: "spl",
             amount: BigInt(rawLamports),
             decimals,
             display: +formatUnits(rawLamports, decimals),
@@ -95,6 +96,7 @@ export function useBalances(rawAddress: string | undefined) {
               continue;
             }
             balances[mint] = {
+              type: "spl",
               amount,
               decimals,
               display: +formatUnits(amount, decimals),
@@ -121,6 +123,7 @@ export function useBalances(rawAddress: string | undefined) {
               continue;
             }
             balances[mint] = {
+              type: "token-2022",
               amount,
               decimals,
               display: +formatUnits(amount, decimals),

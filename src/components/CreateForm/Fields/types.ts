@@ -1,6 +1,6 @@
 import type { Dispatch, SetStateAction } from "react";
 
-import type { InputLockSchema } from "../../../program/createLock";
+import type { InputLockSchema } from "../../../lock/createLock";
 
 export type FieldProps = {
   state: Partial<InputLockSchema>;

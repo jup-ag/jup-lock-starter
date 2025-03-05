@@ -65,7 +65,7 @@ const ConnectWalletTrigger: React.FC<ConnectWalletTriggerProps> = ({
 
   return (
     <Button
-      className={cn("text-2xl font-medium py-0 px-2.5", className)}
+      className={cn("text-2xl font-medium px-2.5", className)}
       onClick={handleClick}
       disabled={connecting}
       {...props}

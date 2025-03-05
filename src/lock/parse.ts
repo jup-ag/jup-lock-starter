@@ -93,12 +93,14 @@ export function parseVestingEscrow({
 
   const cancelMode = getCancelModeFromValue(escrow.cancelMode);
   if (!cancelMode) {
+    console.error("parsingVestingEscrow: invalid cancel mode!");
     return;
   }
   const updateRecipientMode = getUpdateRecipientModeFromValue(
     escrow.updateRecipientMode,
   );
   if (!updateRecipientMode) {
+    console.error("parsingVestingEscrow: invalid update recipient mode!");
     return;
   }
 

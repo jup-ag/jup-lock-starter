@@ -7,7 +7,7 @@ import {
   createLock,
   LockSchema,
   type InputLockSchema,
-} from "../../program/createLock";
+} from "../../lock/createLock";
 import { Button } from "../Button";
 import { useBalances } from "../../rpc/useBalances";
 import { UpdateRecipientModeField } from "./Fields/UpdateRecipientMode";

@@ -1,6 +1,6 @@
 import { safeParse } from "valibot";
 
-import { LockSchema, type InputLockSchema } from "../../../program/createLock";
+import { LockSchema, type InputLockSchema } from "../../../lock/createLock";
 
 export function parseLockSchemaValue(
   state: Partial<InputLockSchema>,

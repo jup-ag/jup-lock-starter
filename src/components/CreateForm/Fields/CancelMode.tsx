@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from "react";
 
 import type { FieldProps } from "./types";
-import { CancelMode, ModeLabel } from "../../../program/modes";
+import { CancelMode, ModeLabel } from "../../../lock/modes";
 import { parseLockSchemaValue } from "./utils";
 import { cn } from "../../../styles/cn";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "../../Select";
