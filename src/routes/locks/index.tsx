@@ -1,11 +1,11 @@
+import { useMemo } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useWallet } from "@solana-wallets/react-2.0";
 
-import { ConnectWalletButton } from "../../components/ConnectWalletButton";
-import { useMemo } from "react";
-import { useQueryLocksByUser } from "../../lock/queryLock";
-import { useBalances } from "../../rpc/useBalances";
-import { TruncatedAddress } from "../../components/TruncatedAddress";
+import { useQueryLocksByUser } from "~/lock/queryLock";
+import { ConnectWalletButton } from "~/components/ConnectWalletButton";
+import { TruncatedAddress } from "~/components/TruncatedAddress";
+import { ExternalLink } from "~/components/ExternalLink";
 
 export const Route = createFileRoute("/locks/")({
   component: RouteComponent,
@@ -17,33 +17,35 @@ function RouteComponent() {
     () => getTransactionSendingSigner(),
     [connectedAccount],
   );
-  const { data: balances } = useBalances(signer?.address.toString());
   const { data: locks, status: locksStatus } = useQueryLocksByUser(
     signer?.address.toString(),
-    balances,
   );
   return (
     <>
       <header className="text-4xl font-medium">View Locks</header>
       <div className="space-y-7.5">
         <ConnectWalletButton />
-        {locksStatus === "success" && locks.length > 0 ? (
+        {/* Loading */}
+        {signer && locksStatus === "pending" && <div>Loading locks...</div>}
+
+        {/* Success */}
+        {locksStatus === "success" && locks.length > 0 && (
           <ul className="flex flex-col gap-y-6">
             {locks.map((lock) => (
-              <li key={lock.address}>
-                <a
-                  className="flex flex-col gap-y-1.5"
+              <li key={lock.address} className="flex flex-col gap-y-1.5">
+                <ExternalLink
+                  className="hover:underline block"
                   href={`https://solscan.io/account/${lock.address}`}
-                  target="_blank"
-                  rel="noreferrer"
                 >
                   <TruncatedAddress address={lock.address} />
-                  <span>{lock.total_locked_amount}</span>
-                </a>
+                </ExternalLink>
+                <span>{lock.total_locked_amount}</span>
               </li>
             ))}
           </ul>
-        ) : null}
+        )}
+
+        {/* Error */}
       </div>
     </>
   );

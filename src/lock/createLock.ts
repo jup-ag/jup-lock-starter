@@ -4,6 +4,7 @@ import {
   getAddressEncoder,
   getProgramDerivedAddress,
   getUtf8Encoder,
+  isAddress,
   type IInstruction,
   type TransactionSendingSigner,
 } from "@solana/web3.js";
@@ -12,6 +13,7 @@ import {
   findAssociatedTokenPda,
   getCreateAssociatedTokenIdempotentInstruction,
   getSyncNativeInstruction,
+  fetchAllMint,
 } from "@solana-program/token";
 import { getTransferSolInstruction } from "@solana-program/system";
 import * as v from "valibot";
@@ -49,14 +51,21 @@ function FormNumberSchema(msg: string) {
   );
 }
 
+function AddressSchema(msg: string) {
+  return v.pipe(
+    v.string(msg),
+    v.custom((str) => isAddress(str as string), "Invalid address"),
+  );
+}
+
 export const LockSchema = v.object({
   title: v.pipe(
     v.string("Lock title is required."),
     v.minLength(1, "Lock title is required."),
   ),
-  tokenAddress: v.string("Token address is required."),
+  tokenAddress: AddressSchema("Token address is required."),
   tokenAmount: FormNumberSchema("Token amount is required."),
-  recipient: v.pipe(v.string("Recipient address is required.")),
+  recipient: AddressSchema("Recipient address is required."),
   startDate: v.string("Lock start date is required."),
   duration: FormNumberSchema("Vesting duration is required."),
   cliffDuration: v.optional(
