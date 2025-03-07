@@ -1,0 +1,11 @@
+# https://developers.cloudflare.com/pages/functions/wrangler-configuration
+name = "jup-lock-starter"
+compatibility_date = "2025-03-07"
+pages_build_output_dir = "dist"
+
+# https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
+[placement]
+mode = "smart"
+
+[observability]
+enabled = true
